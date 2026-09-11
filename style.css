@@ -611,14 +611,12 @@ footer a:hover{color:var(--accent)}
    keeps its native tap behaviour and its native cursor.
    ========================================================================== */
 
-/* --- Droplet cursor ------------------------------------------------------
+/* --- Droplet wake --------------------------------------------------------
    A single fixed canvas covers the viewport and draws the bead and its
-   ripples. The native cursor is hidden only while the pointer is actually
-   inside a sky section and away from anything clickable, which is why the
-   class is toggled on the root element rather than set in one place. */
+   ripples. The real cursor is left alone and stays on top: hiding it put the
+   visible bead a little behind wherever the pointer actually was, which made
+   clicking feel wrong. The droplet is the wake, not the cursor. */
 .droplet{position:fixed;inset:0;z-index:70;pointer-events:none;display:block}
-html.drop-on,html.drop-on body{cursor:none}
-html.drop-on a,html.drop-on button,html.drop-on input{cursor:none}
 
 /* --- Scattering words ----------------------------------------------------
    script.js wraps every word of the bio in one of these. The transition is
@@ -626,10 +624,21 @@ html.drop-on a,html.drop-on button,html.drop-on input{cursor:none}
    the browser eases towards it, then back to nothing when the pointer leaves. */
 .focus-read .w{display:inline-block;transition:transform .38s cubic-bezier(.22,.9,.28,1),
   color .38s ease,text-shadow .38s ease}
-.focus-read .w.lit{color:var(--ink);text-shadow:0 0 22px rgba(138,164,255,.55)}
-/* A glossary term scatters as one piece, underline and all, rather than
-   letting its text drift out from under its own dotted rule. */
-.focus-read .gl.w{display:inline-block}
+/* A word that has been thrown clear stops taking the pointer, so it cannot
+   sit on top of a glossary term and swallow the hover meant for it. */
+.focus-read .w.lit{color:var(--ink);text-shadow:0 0 22px rgba(138,164,255,.55);pointer-events:none}
+
+/* Glossary terms hold their ground while the words around them scatter. They
+   are the one thing in the paragraph you need to be able to aim at, and a
+   definition panel is unreadable with loose words drifting across it. */
+.focus-read .gl.w{display:inline-block;position:relative;z-index:3}
+.focus-read .gl.w:hover,.focus-read .gl.w:focus{z-index:41}
+/* While the paragraph is scattering, a term carries the page colour with it.
+   Staying put is not enough on its own: a thrown word will happily land on
+   top of one and make it unreadable. The shadow is a spread rather than
+   padding so the term keeps its exact measured position. */
+.focus-read.scattering .gl.w{z-index:6;border-radius:3px;
+  background:rgba(8,13,29,.96);box-shadow:0 0 0 5px rgba(8,13,29,.96)}
 
 @media (prefers-reduced-motion:reduce){
   .focus-read .w{transition:none}

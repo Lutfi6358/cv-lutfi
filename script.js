@@ -882,30 +882,34 @@
     var vx = 0, vy = 0;
     var active = false, running = false;
     var ripples = [], trail = [], travelled = 0;
-    var root = document.documentElement;
+
+    function zoneAt(el) {
+      return !!(el && el.closest && el.closest(ZONES) && !el.closest(KEEP_ARROW));
+    }
+
+    function setActive(on) {
+      if (on === active) { return; }
+      active = on;
+      if (on) { px = mx; py = my; start(); }   // no long swoop in from the last spot
+    }
 
     document.addEventListener('pointermove', function (e) {
       mx = e.clientX; my = e.clientY;
-      var t = e.target;
-      var inZone = t && t.closest && t.closest(ZONES) && !t.closest(KEEP_ARROW);
-      if (inZone && !active) {
-        active = true;
-        px = mx; py = my;                      // no long swoop in from the last spot
-        root.classList.add('drop-on');
-        start();
-      } else if (!inZone && active) {
-        active = false;
-        root.classList.remove('drop-on');
-      }
+      setActive(zoneAt(e.target));
     }, { passive: true });
 
     document.addEventListener('pointerdown', function () {
       if (active) { ripples.push({ x: mx, y: my, t: 0, max: 150, w: 2.4 }); }
     }, { passive: true });
 
-    document.addEventListener('pointerleave', function () {
-      active = false;
-      root.classList.remove('drop-on');
+    document.addEventListener('pointerleave', function () { setActive(false); }, { passive: true });
+
+    /* Scrolling moves the page under a pointer that has not itself moved, so
+       no pointermove fires and the zone the bead thinks it is in goes stale.
+       Re-test what is actually under the pointer instead. */
+    window.addEventListener('scroll', function () {
+      if (mx < 0) { return; }
+      setActive(zoneAt(document.elementFromPoint(mx, my)));
     }, { passive: true });
 
     function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
@@ -915,9 +919,10 @@
 
       if (active) {
         // The bead chases the pointer. The gap between the two is what gives
-        // it weight, and the velocity is what stretches it.
-        var nx = px + (mx - px) * 0.2;
-        var ny = py + (my - py) * 0.2;
+        // it weight, and the velocity is what stretches it. It follows closely
+        // now that the real cursor is on top: a long lag read as a lost cursor.
+        var nx = px + (mx - px) * 0.3;
+        var ny = py + (my - py) * 0.3;
         vx = nx - px; vy = ny - py;
         px = nx; py = ny;
 
@@ -973,15 +978,17 @@
         ctx.fillStyle = halo;
         ctx.beginPath(); ctx.arc(0, 0, R * 2.4, 0, TAU); ctx.fill();
 
+        // Slightly softer than a solid bead, so the arrow sitting on top of it
+        // stays the thing you read as the cursor.
         var body = ctx.createRadialGradient(-R * 0.3, -R * 0.35, R * 0.1, 0, 0, R);
-        body.addColorStop(0, 'rgba(255,255,255,.74)');
-        body.addColorStop(0.45, 'rgba(184,206,255,.36)');
-        body.addColorStop(1, 'rgba(150,178,255,.10)');
+        body.addColorStop(0, 'rgba(255,255,255,.58)');
+        body.addColorStop(0.45, 'rgba(184,206,255,.30)');
+        body.addColorStop(1, 'rgba(150,178,255,.09)');
         ctx.fillStyle = body;
         ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fill();
 
-        ctx.strokeStyle = 'rgba(240,246,255,.82)';
-        ctx.lineWidth = 1.3;
+        ctx.strokeStyle = 'rgba(240,246,255,.70)';
+        ctx.lineWidth = 1.2;
         ctx.beginPath(); ctx.arc(0, 0, R - 0.7, 0, TAU); ctx.stroke();
 
         // the glint that makes it read as a bead rather than a dot
@@ -1040,7 +1047,12 @@
     var words = Array.prototype.slice.call(host.querySelectorAll('.w'));
     if (!words.length) { return; }
 
-    var boxes = [], measured = false;
+    // Glossary terms are the one thing in the paragraph a reader has to aim
+    // at, so they never move. Cached here rather than asking classList on
+    // every word on every frame.
+    var isTerm = words.map(function (w) { return w.classList.contains('gl'); });
+
+    var boxes = [], measured = false, holding = false;
 
     /* Positions are taken with every word at rest, in page coordinates. */
     function measure() {
@@ -1060,7 +1072,8 @@
 
     function apply() {
       queued = false;
-      if (!cursor) { return; }
+      if (!cursor || holding) { return; }
+      host.classList.add('scattering');
       var cx = cursor.x, cy = cursor.y;
 
       for (var i = 0; i < words.length; i++) {
@@ -1069,7 +1082,7 @@
         var d = Math.hypot(dx, dy);
         var tx = 0, ty = 0, sc = 1, rot = 0, lit = false;
 
-        if (d < RADIUS) {
+        if (d < RADIUS && !isTerm[i]) {
           var f = 1 - d / RADIUS;
           f *= f;                                  // concentrate the effect near the tip
           var k = d < 0.001 ? 0 : PUSH * f / d;
@@ -1099,14 +1112,31 @@
       if (!queued) { queued = true; requestAnimationFrame(apply); }
     }, { passive: true });
 
-    host.addEventListener('pointerleave', function () {
-      cursor = null;
+    function rest() {
+      host.classList.remove('scattering');
       words.forEach(function (w, i) {
         w.style.transform = '';
         w.classList.remove('lit');
-        boxes[i].tx = 0; boxes[i].ty = 0; boxes[i].lit = false;
+        if (boxes[i]) { boxes[i].tx = 0; boxes[i].ty = 0; boxes[i].lit = false; }
       });
+    }
+
+    host.addEventListener('pointerleave', function () {
+      cursor = null;
+      rest();
     }, { passive: true });
+
+    /* Reading a definition and scattering the paragraph are two different
+       jobs. The moment a glossary term is hovered or focused, every word
+       settles back into place so the panel opens over clean text. */
+    Array.prototype.forEach.call(host.querySelectorAll('.gl'), function (term) {
+      function hold() { holding = true; rest(); }
+      function release() { holding = false; }
+      term.addEventListener('pointerenter', hold);
+      term.addEventListener('pointerleave', release);
+      term.addEventListener('focus', hold);
+      term.addEventListener('blur', release);
+    });
 
     var rt;
     window.addEventListener('resize', function () {
