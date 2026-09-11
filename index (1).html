@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ahmad Lutfi Afifi Mohd Nasir — Hilal detection and falak</title>
+<meta name="description" content="Ahmad Lutfi Afifi bin Mohd Nasir. Research Assistant and PhD candidate at ESERI, Universiti Sultan Zainal Abidin. Automated new crescent moon detection using image processing and computer vision.">
+<meta name="author" content="Ahmad Lutfi Afifi bin Mohd Nasir">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Ahmad Lutfi Afifi Mohd Nasir">
+<meta property="og:description" content="Automated hilal detection, falak and computer vision. ESERI, Universiti Sultan Zainal Abidin.">
+<meta property="og:url" content="https://hotohhilal.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230A1628'/%3E%3Cpath d='M17 7a8 8 0 0 0 8 8 9.5 9.5 0 1 1-8-8Z' fill='%23C9A227'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1628; --ink2:#0D1D33; --slate:#12294A;
+  --line:rgba(200,215,235,.14); --line2:rgba(200,215,235,.08);
+  --brass:#C9A227; --amber:#E8B667;
+  --paper:#E9EEF6; --dusk:#93A4BE;
+  --display:'Spectral',Georgia,'Times New Roman',serif;
+  --ui:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,sans-serif;
+  --gut:clamp(1.25rem,5vw,4.5rem);
+  --maxw:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--display);font-size:17px;line-height:1.68;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--display);font-weight:500;line-height:1.18;margin:0}
+a{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(232,182,103,.35)}
+a:hover{border-bottom-color:var(--amber)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:2px}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  background:rgba(10,22,40,.86);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line2);
+}
+.nav-in{
+  max-width:var(--maxw);margin:0 auto;padding:.7rem var(--gut);
+  display:flex;align-items:center;gap:1.5rem;
+}
+.mark{font-family:var(--ui);font-size:.82rem;font-weight:600;letter-spacing:.02em;
+  color:var(--paper);border:0;white-space:nowrap}
+.mark span{color:var(--brass)}
+.nav ul{
+  list-style:none;display:flex;gap:1.15rem;margin:0 0 0 auto;padding:0;
+  overflow-x:auto;scrollbar-width:none;
+}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--ui);font-size:.8rem;color:var(--dusk);border:0;white-space:nowrap}
+.nav a:hover,.nav a:focus-visible{color:var(--paper)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:88vh;display:flex;align-items:flex-end;overflow:hidden}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(100deg,rgba(8,17,32,.90) 0%,rgba(8,17,32,.72) 38%,rgba(8,17,32,.12) 62%,rgba(8,17,32,0) 78%)}
+@media(max-width:760px){.hero::after{
+  background:linear-gradient(to bottom,rgba(8,17,32,.86) 0%,rgba(8,17,32,.74) 55%,rgba(8,17,32,.28) 82%,rgba(8,17,32,0) 100%)}}
+.hero-in{
+  position:relative;z-index:2;max-width:var(--maxw);width:100%;
+  margin:0 auto;padding:9rem var(--gut) 3.5rem;
+}
+.hero h1{
+  font-size:clamp(2.35rem,6.2vw,4.35rem);font-weight:400;letter-spacing:-.015em;
+  max-width:15ch;
+}
+.role{
+  font-family:var(--ui);font-size:.92rem;color:var(--brass);
+  margin:1.1rem 0 0;line-height:1.6;
+}
+.role em{color:var(--dusk);font-style:normal;display:block}
+.lede{font-size:1.09rem;color:#C7D3E4;max-width:56ch;margin:1.5rem 0 0}
+.acts{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:2rem}
+.btn{
+  font-family:var(--ui);font-size:.85rem;padding:.62rem 1.1rem;border-radius:2px;
+  border:1px solid var(--line);color:var(--paper);background:rgba(18,41,74,.55);
+}
+.btn:hover{border-color:var(--brass);color:#fff}
+.btn-key{background:var(--brass);border-color:var(--brass);color:#14243D;font-weight:600}
+.btn-key:hover{background:var(--amber);border-color:var(--amber);color:#14243D}
+#glow{opacity:0;animation:rise 2.4s ease-out .25s forwards}
+@keyframes rise{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#glow{animation:none;opacity:1}}
+
+/* ---------- structure ---------- */
+section{padding:5rem 0;border-top:1px solid var(--line2)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+h2{font-size:clamp(1.6rem,3.2vw,2.1rem);font-weight:400;margin-bottom:.4rem}
+.sub{font-family:var(--ui);font-size:.88rem;color:var(--dusk);max-width:58ch;margin:0 0 2.4rem}
+p{margin:0 0 1.15rem}
+.prose{max-width:66ch}
+.prose p{color:#C7D3E4}
+
+/* ---------- figures strip ---------- */
+.about-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.85fr);
+  gap:clamp(2rem,5vw,4.5rem);align-items:start}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--line2);border:1px solid var(--line2)}
+@media(max-width:900px){.figs{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))};}
+.glance{font-family:var(--ui);font-size:.76rem;color:var(--dusk);margin:0 0 .9rem}
+.fig{background:var(--ink);padding:1.15rem 1.2rem}
+.fig b{display:block;font-family:var(--display);font-size:1.85rem;font-weight:400;color:var(--brass);line-height:1}
+.fig span{font-family:var(--ui);font-size:.76rem;color:var(--dusk);display:block;margin-top:.4rem}
+
+/* ---------- research list ---------- */
+.areas{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.areas li{
+  display:grid;grid-template-columns:1.4rem 13rem 1fr;gap:1.4rem;align-items:start;
+  padding:1.35rem 0;border-bottom:1px solid var(--line2);
+}
+.areas h3{font-size:1.02rem;font-weight:500}
+.areas p{font-family:var(--ui);font-size:.87rem;color:var(--dusk);margin:0}
+.areas svg{width:1.4rem;height:1.4rem;stroke:var(--brass);fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;margin-top:.1rem}
+@media(max-width:720px){.areas li{grid-template-columns:1.4rem 1fr;gap:.9rem}
+  .areas p{grid-column:2}}
+
+/* ---------- systems ---------- */
+.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1px;
+  background:var(--line2);border:1px solid var(--line2)}
+.sys article{background:var(--ink2);padding:1.5rem 1.4rem}
+.sys h3{font-size:1rem;font-weight:600;margin-bottom:.15rem}
+.sys .tag{font-family:var(--ui);font-size:.7rem;color:var(--brass);display:block;margin-bottom:.55rem}
+.sys p{font-family:var(--ui);font-size:.85rem;color:var(--dusk);margin:0}
+
+/* ---------- publications ---------- */
+.filter{display:flex;gap:.5rem;margin-bottom:2.2rem;flex-wrap:wrap}
+.filter button{
+  font-family:var(--ui);font-size:.82rem;padding:.45rem .95rem;cursor:pointer;
+  background:transparent;border:1px solid var(--line);color:var(--dusk);border-radius:2px;
+}
+.filter button[aria-pressed="true"]{border-color:var(--brass);color:var(--brass);background:rgba(201,162,39,.08)}
+.year{display:grid;grid-template-columns:5.5rem 1fr;gap:1.5rem;padding:1.7rem 0;
+  border-top:1px solid var(--line2)}
+.year > div:first-child{position:sticky;top:84px;align-self:start}
+.year > div:first-child b{font-family:var(--display);font-size:1.5rem;font-weight:300;
+  color:var(--brass);line-height:1;display:block}
+.year > div:first-child i{font-family:var(--ui);font-size:.68rem;color:var(--dusk);
+  font-style:normal;display:block;margin-top:.35rem}
+.year ol{list-style:none;margin:0;padding:0}
+.year li{font-size:.95rem;line-height:1.6;color:#C2CFE1;padding:0 0 1.1rem 1.3rem;
+  text-indent:-1.3rem}
+.year li:last-child{padding-bottom:0}
+.year li strong{color:var(--paper);font-weight:600}
+.idx{font-family:var(--ui);font-size:.7rem;color:var(--brass);white-space:nowrap;
+  border:1px solid rgba(201,162,39,.3);padding:.05rem .35rem;border-radius:2px;
+  text-indent:0;display:inline-block;margin-left:.3rem}
+@media(max-width:720px){.year{grid-template-columns:1fr;gap:.7rem}
+  .year > div:first-child{position:static}}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:.85rem}
+.tbl th{text-align:left;font-weight:600;color:var(--dusk);font-size:.76rem;
+  padding:.6rem .8rem .6rem 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:.85rem .8rem .85rem 0;border-bottom:1px solid var(--line2);
+  color:#C2CFE1;vertical-align:top}
+.tbl td:first-child{color:var(--paper)}
+.scroll{overflow-x:auto}
+.state{font-size:.74rem;color:var(--brass);white-space:nowrap}
+
+/* ---------- timeline ---------- */
+.cv{list-style:none;margin:0;padding:0}
+.cv li{display:grid;grid-template-columns:5.5rem 1fr;gap:1.5rem;padding:1.3rem 0;
+  border-top:1px solid var(--line2)}
+.cv b{font-family:var(--display);font-size:1.15rem;font-weight:300;color:var(--brass)}
+.cv h3{font-size:1rem;font-weight:500;margin-bottom:.25rem}
+.cv p{font-family:var(--ui);font-size:.84rem;color:var(--dusk);margin:0}
+.cv i{color:#B8C6DA}
+@media(max-width:720px){.cv li{grid-template-columns:1fr;gap:.35rem}}
+
+/* ---------- contact ---------- */
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;
+  background:var(--line2);border:1px solid var(--line2);margin-top:2rem}
+.links a{background:var(--ink2);padding:1.05rem 1.2rem;border:0;display:block;
+  font-family:var(--ui);font-size:.86rem;color:var(--paper)}
+.links a:hover{background:var(--slate)}
+.links a span{display:block;font-size:.72rem;color:var(--dusk);margin-top:.2rem;
+  overflow-wrap:anywhere}
+.mail{font-family:var(--display);font-size:clamp(1.2rem,3.4vw,1.75rem);font-weight:300}
+footer{padding:2.5rem 0 3.5rem;border-top:1px solid var(--line2)}
+footer p{font-family:var(--ui);font-size:.76rem;color:var(--dusk);margin:0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="mark" href="#top">Ahmad Lutfi Afifi <span>·</span> hotohhilal</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#funding">Funding</a></li>
+      <li><a href="#recognition">Recognition</a></li>
+      <li><a href="#background">Background</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0A1628"/><stop offset=".42" stop-color="#0E2244"/>
+        <stop offset=".66" stop-color="#1B3B63"/><stop offset=".80" stop-color="#3E4E63"/>
+        <stop offset=".90" stop-color="#8A6A44"/><stop offset="1" stop-color="#C08A46"/>
+      </linearGradient>
+      <radialGradient id="halo" cx=".5" cy=".5" r=".5">
+        <stop offset="0" stop-color="#F0DFB8" stop-opacity=".34"/>
+        <stop offset="1" stop-color="#F0DFB8" stop-opacity="0"/>
+      </radialGradient>
+      <mask id="cres">
+        <circle cx="905" cy="437" r="34" fill="#fff"/>
+        <circle cx="889" cy="424" r="30" fill="#000"/>
+      </mask>
+    </defs>
+    <rect width="1200" height="720" fill="url(#sky)"/>
+    <g fill="#fff">
+      <circle cx="120" cy="88" r="1.5" opacity=".5"/><circle cx="318" cy="150" r="1.1" opacity=".35"/>
+      <circle cx="520" cy="70" r="1.7" opacity=".45"/><circle cx="700" cy="180" r="1.2" opacity=".3"/>
+      <circle cx="960" cy="105" r="1.5" opacity=".4"/><circle cx="1105" cy="215" r="1.3" opacity=".35"/>
+      <circle cx="245" cy="250" r="1.1" opacity=".28"/><circle cx="1040" cy="320" r="1.2" opacity=".26"/>
+      <circle cx="800" cy="255" r="1.4" opacity=".32"/><circle cx="415" cy="330" r="1" opacity=".22"/>
+    </g>
+    <g id="glow">
+      <circle cx="905" cy="437" r="118" fill="url(#halo)"/>
+      <circle cx="905" cy="437" r="34" fill="#FFF4DC" mask="url(#cres)"/>
+    </g>
+    <!-- altitude scale: what hilal visibility is actually measured against -->
+    <g stroke="#C9A227" stroke-opacity=".5" stroke-width="1" fill="none">
+      <line x1="1035" y1="300" x2="1035" y2="600"/>
+      <line x1="1035" y1="600" x2="1052" y2="600"/><line x1="1035" y1="540" x2="1048" y2="540"/>
+      <line x1="1035" y1="480" x2="1052" y2="480"/><line x1="1035" y1="420" x2="1048" y2="420"/>
+      <line x1="1035" y1="360" x2="1052" y2="360"/><line x1="1035" y1="300" x2="1048" y2="300"/>
+    </g>
+    <g fill="#C9A227" fill-opacity=".72" font-family="'IBM Plex Sans',sans-serif" font-size="12">
+      <text x="1062" y="604">0°</text><text x="1062" y="484">10°</text><text x="1062" y="364">20°</text>
+    </g>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#E8B667" stroke-opacity=".38" stroke-width="1"/>
+    <path d="M0,720 L0,648 L170,624 L340,652 L520,616 L700,650 L880,620 L1060,648 L1200,622 L1200,720 Z" fill="#081221"/>
+  </svg>
+
+  <div class="hero-in">
+    <h1>Ahmad Lutfi Afifi bin Mohd Nasir</h1>
+    <p class="role">Research Assistant and PhD candidate
+      <em>East Coast Environmental Research Institute, Universiti Sultan Zainal Abidin</em></p>
+    <p class="lede">Whether the new crescent moon can be seen on a given evening decides when the
+      Islamic month begins. I work on answering that question with instruments and code rather than
+      the naked eye alone, building detection systems that find the hilal in images taken at
+      Balai Cerap KUSZA and other observatories in Malaysia.</p>
+    <div class="acts">
+      <a class="btn btn-key" href="#research">See the research</a>
+      <a class="btn" href="Ahmad_Lutfi_Afifi_CV.pdf">Download CV</a>
+      <a class="btn" href="#publications">Publications</a>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <h2>About</h2>
+    <p class="sub">Falak on one side, computer vision on the other.</p>
+    <div class="about-grid">
+      <div class="prose">
+      <p>My training started in Islamic studies. I took a Diploma and then a Bachelor of Islamic
+      Studies in Syariah at Universiti Sultan Zainal Abidin, specialising in Islamic astronomy, with
+      a thesis on the legal analysis of prayer in high-altitude areas and high-rise buildings.
+      A Master of Science in Astronomy followed, on using image processing and enhancement
+      techniques to detect new crescent moon visibility.</p>
+
+      <p>That sequence is the reason I work the way I do. Hilal determination is a question of fiqh
+      before it is a question of optics, and a detection system that ignores either half is not much
+      use to the people who have to make the decision. So the work runs in both directions: applying
+      deep learning and image enhancement to observation data, and keeping the output legible to the
+      criteria that isbat actually uses.</p>
+
+      <p>I am based at Balai Cerap KUSZA with the East Coast Environmental Research Institute, where
+      my work covers crescent detection, sky brightness and light pollution monitoring across
+      Malaysian observation sites, and the observation systems themselves. Part of that has meant
+      taking the systems out of the lab, including teaching, installing and running hands-on
+      training on the HOTOH system for the Terengganu State Mufti Office.</p>
+      </div>
+      <aside>
+        <p class="glance">Record to date</p>
+        <div class="figs">
+      <div class="fig"><b>13</b><span>Journal articles</span></div>
+      <div class="fig"><b>11</b><span>Conference proceedings</span></div>
+      <div class="fig"><b>4</b><span>Book chapters</span></div>
+      <div class="fig"><b>8</b><span>Patent and copyright filings</span></div>
+      <div class="fig"><b>4</b><span>Research grants</span></div>
+        <div class="fig"><b>13</b><span>Innovation awards</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <h2>Research</h2>
+    <p class="sub">Four threads that keep meeting in the same problem.</p>
+    <ul class="areas">
+      <li>
+        <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <h3>Islamic astronomy</h3>
+        <p>Hisab and rukyah, the fiqh basis for moon sighting, and how classical falak sources
+        translate into criteria a modern system can be held to.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24"><path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44"/><path d="m13.56 11.747 4.332-.924"/><path d="m16 21-3.105-6.21"/><path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z"/><path d="m6.158 8.633 1.114 4.456"/><path d="m8 21 3.105-6.21"/><circle cx="12" cy="13" r="2"/></svg>
+        <h3>Hilal observation and visibility</h3>
+        <p>Field observation at Malaysian sites, the limits of optical equipment for a thin crescent,
+        and how sky brightness and light pollution constrain what is recoverable.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        <h3>Image processing</h3>
+        <p>Contrast enhancement and transform-based methods for pulling a low-contrast crescent out
+        of a bright twilight sky, including Circular Hough Transform detection.</p>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>
+        <h3>Artificial intelligence and computer vision</h3>
+        <p>Object detection applied to crescent imagery, including YOLO-based approaches, aimed at
+        automated detection that runs on live observation rather than archived data.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="systems">
+  <div class="wrap">
+    <h2>Systems</h2>
+    <p class="sub">Registered software and instrumentation from this work. One patent filing,
+      seven copyrights.</p>
+    <div class="sys">
+      <article>
+        <h3>HORTOH</h3><span class="tag">Patent filed · P12024000157</span>
+        <p>Hybrid Observation Roslan Technique of Hilal.</p>
+      </article>
+      <article>
+        <h3>HOTOH 2.0</h3><span class="tag">Copyright · CRLY2024C01739</span>
+        <p>Hybrid Observation Technique of Hilal, second generation. Deployed and taught to the
+        Terengganu State Mufti Office.</p>
+      </article>
+      <article>
+        <h3>MySIGHT</h3><span class="tag">Copyright · CRLY2026T03441</span>
+        <p>Malaysia Smart Integrated Global Hilal Tracker.</p>
+      </article>
+      <article>
+        <h3>Lunar Vision</h3><span class="tag">Copyright · CRLY2025C02375</span>
+        <p>Advanced new crescent moon detection.</p>
+      </article>
+      <article>
+        <h3>SkySight</h3><span class="tag">Copyright · CRDV2025Q02626</span>
+        <p>Spatial model for human perception and astronomical visibility in light pollution
+        studies.</p>
+      </article>
+      <article>
+        <h3>Modul Interaktif Astronomi I-Falak</h3><span class="tag">Copyright · CRDV2025Q02627</span>
+        <p>Interactive teaching module for falak.</p>
+      </article>
+      <article>
+        <h3>Astrotourism at KUSZA Observatory</h3><span class="tag">Copyright · CRLY2024C01738</span>
+        <p>Visitor experience and astronomy knowledge programme at Balai Cerap KUSZA.</p>
+      </article>
+      <article>
+        <h3>Falak through hybrid methods</h3><span class="tag">Copyright · CRLY2023C01927</span>
+        <p>Interactive games and augmented reality for teaching and learning falak.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="wrap">
+    <h2>Publications</h2>
+    <p class="sub">Listed below are the papers detailed in my CV. The complete indexed record is on
+      <a href="https://www.scopus.com/authid/detail.uri?authorId=57208125285">Scopus</a>,
+      <a href="https://www.webofscience.com/wos/author/record/54318209">Web of Science</a> and
+      <a href="https://scholar.google.com/citations?user=dQ2Bi_IAAAAJ&amp;hl=en">Google Scholar</a>.</p>
+
+    <div class="filter" role="group" aria-label="Filter publications">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="journal" aria-pressed="false">Journal articles</button>
+      <button type="button" data-f="proc" aria-pressed="false">Conference proceedings</button>
+    </div>
+
+    <div class="year" data-kind="journal">
+      <div><b>2026</b><i>Journal</i></div>
+      <ol>
+        <li>Syed Zafar, S. N. A., Hazmin, S. N., Afandi, N. Z. M., Jusoh, H. H. W., Belly, A. H.,
+          <strong>Nasir, A. L. A. M.</strong>, &amp; Umar, R. Exploring the evolution of geomagnetic
+          field research: A bibliometric perspective using SCOPUS database (1921–2023).
+          <i>Journal of Atmospheric and Solar-Terrestrial Physics</i>, 283, 106816.
+          <span class="idx">ISI Q2</span></li>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Bely, A. H., Sabri, N. H., Zulkeflee, A. N.,
+          Yussof, W. N. J. W., &amp; Chik, W. M. Y. W. A performance evaluation of small-scale mobile
+          telescope systems for sky survey operations at the Negeri Sembilan Observatory (NSO).
+          <i>Jurnal Fizik Malaysia</i>, 47(1), 10135–10150. <span class="idx">WoS Q4</span></li>
+      </ol>
+    </div>
+
+    <div class="year" data-kind="journal">
+      <div><b>2025</b><i>Journal</i></div>
+      <ol>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Yussof, W. N. J. W., Ahmad, N.,
+          Zulkeflee, A. N., Sabri, N. H., Chik, W. M. Y. W., Mahiddin, N. A., Bely, A. H., &amp;
+          Izdihar, A. I. S. New crescent moon detection using Circular Hough Transform (CHT).
+          <i>Astronomy and Computing</i>, 51, 100902. <span class="idx">ISI Q2</span></li>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Bely, A. H., Sabri, N. H., Zulkeflee, A. N.,
+          Yussof, W. N. J. W., &amp; Chik, W. M. Y. W. From naked eye to CCD: Historical review of
+          moon sighting observation technique in Malaysia. <i>Jurnal Fizik Malaysia</i>, 46(1),
+          10012–10030. <span class="idx">WoS Q4</span></li>
+        <li>Bely, A. H., Umar, R., Sabri, N. H., <strong>Nasir, A. L. A. M.</strong>, Hussaini, R.,
+          Zulkifli, E. Z., et al. The limitation of optical equipment in new crescent moon
+          visibility: Insight from 27 years of observation data in Sarawak, Malaysia.
+          <i>Sains Malaysiana</i>, 54(9), 2263–2276. <span class="idx">WoS Q3</span></li>
+        <li>Bely, A. H., Umar, R., Sabri, N. H., <strong>Nasir, A. L. A. M.</strong>, Zulkifli, E. Z.,
+          Redzuan, A. A., Zainal Abidin, Z., Hodgson, J., &amp; Rakhmadi, A. J. Review on site
+          suitability of observatory locations for astronomy purposes.
+          <i>Jurnal Fizik Malaysia</i>, 46(1), 10042–10055. <span class="idx">WoS Q4</span></li>
+      </ol>
+    </div>
+
+    <div class="year" data-kind="proc">
+      <div><b>2025</b><i>Proceedings</i></div>
+      <ol>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Odeh, M. S., Yussof, W. N. J. W.,
+          Sabri, N. H., Zulkeflee, A. N., Bely, A. H., &amp; Awalludin, E. A. A preliminary study on
+          new crescent moon detection using “You Only Look Once” (YOLO).
+          <i>Proceedings of IEICES</i>, 11, 1073–1079. <span class="idx">Scopus</span></li>
+        <li>Azmi, H. S. M., Bely, A. H., Umar, R., Sabri, N. H., <strong>Nasir, A. L. A. M.</strong>,
+          et al. Mapping the dark sky heritage: Spatial modelling of sky brightness and luminance for
+          Pusat Astronomi Borneo in Sarawak, Malaysia. <i>Proceedings of IEICES</i>, 11, 1347–1352.
+          <span class="idx">Scopus</span></li>
+        <li>Umar, R., Bely, A. H., Sabri, N. H., <strong>Nasir, A. L. A. M.</strong>, et al.
+          Assessment of light pollution at new crescent moon observation sites in Terengganu,
+          Malaysia: A multi brightness metric approach. <i>Proceedings of IEICES</i>, 11, 1044–1051.
+          <span class="idx">Scopus</span></li>
+        <li>Bely, A. H., Umar, R., Sabri, N. H., Azmi, H. S. M., <strong>Nasir, A. L. A. M.</strong>,
+          et al. Comparative assessment of zenithal and horizontal sky brightness profiles for light
+          pollution monitoring: Case study at KUSZA Observatory and Langkawi National Observatory.
+          <i>Proceedings of IEICES</i>, 11, 369–376. <span class="idx">Scopus</span></li>
+      </ol>
+    </div>
+
+    <div class="year" data-kind="journal">
+      <div><b>2024</b><i>Journal</i></div>
+      <ol>
+        <li><strong>Nasir, A. L. A. M.</strong>, Hasibuan, H. W. S., Saifullah, N., &amp;
+          Nazara, R. A. P. Hisab rukyat in the light of the Quran and Sunnah.
+          <i>Al-Hisab: Journal of Islamic Astronomy</i>, 1(1), 24–31. <span class="idx">Scopus</span></li>
+        <li>Bely, A. H., <strong>Nasir, A. L. A. M.</strong>, Umar, R., Chik, W. M. Y. W.,
+          Husaini, R., Othman, M. S., &amp; Rakhmadi, A. J. Empowering astronomical exploration:
+          Advancement of new moon observation devices in Sarawak, Malaysia.
+          <i>Iraqi Journal of Science</i>, 6154–6162. <span class="idx">Scopus</span></li>
+        <li>Umar, R., Sabri, N. H., Bely, A. H., Syed Zafar, S. N. A.,
+          <strong>Nasir, A. L. A. M.</strong>, et al. Teaching and learning astronomy subjects through
+          hybrid methods: Interactive and implementation AL-KAHF games activity based on augmented
+          reality. <i>Jurnal Fizik Malaysia</i>, 45(1), 10184–10194. <span class="idx">WoS Q4</span></li>
+      </ol>
+    </div>
+
+    <div class="year" data-kind="proc">
+      <div><b>2024</b><i>Proceedings</i></div>
+      <ol>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Yussof, W. N. J. W., Ahmad, N.,
+          Zulkeflee, A. N., Sabri, N. H., Kamarulzaman, A. H., &amp; Mahiddin, N. A. The
+          implementation of hybrid observation technique of Hilal (HOTOH).
+          <i>Proceedings of IEICES</i>, 10, 1174–1183. <span class="idx">Scopus</span></li>
+        <li><strong>Nasir, A. L. A. M.</strong>, Umar, R., Yussof, W. N. J. W., Ahmad, N.,
+          Sabri, N. H., Zulkeflee, A. N., Kamarulzaman, A. H., &amp; Mahiddin, N. A. Comparative
+          analysis of image processing technique in determining the new crescent moon visibility.
+          <i>Journal of Physics: Conference Series</i>, 2915(1), 012004. <span class="idx">Scopus</span></li>
+        <li>Bely, A. H., Umar, R., Sabri, N. H., Abidin, Z. Z., <strong>Nasir, A. L. A. M.</strong>,
+          Ismail, I., et al. Light pollution monitoring through zenithal sky brightness at selected
+          Malaysian observatories. <i>Journal of Physics: Conference Series</i>, 2915(1), 012003.
+          <span class="idx">Scopus</span></li>
+      </ol>
+    </div>
+
+    <div class="year" data-kind="journal">
+      <div><b>2023</b><i>Journal</i></div>
+      <ol>
+        <li>Umar, R., Azan, M. A. I. A., Sabri, N. H., Ngah, N., Zulkeflee, A. N., Mohamad, A. E.,
+          et al., &amp; <strong>Nasir, A. L. A. M.</strong> Model reruang magnitud kecerahan langit di
+          Balai Cerap KUSZA, Universiti Sultan Zainal Abidin. <i>Sains Malaysiana</i>, 52(10),
+          2943–2954. <span class="idx">WoS Q3</span></li>
+        <li>Zawawi, M. M., Umar, R., Kamarulzaman, A. H., Samad, F. A., Chik, W. M. Y. W.,
+          <strong>Nasir, A. L. A. M.</strong>, &amp; Bely, A. H. Kitab Bintang 12 Abu Ma'syar
+          Al-Falakiy: Menurut perspektif syarak. <i>Jurnal Islam dan Masyarakat Kontemporari</i>,
+          24(3), 45–57. <span class="idx">MyCite</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="funding">
+  <div class="wrap">
+    <h2>Funding</h2>
+    <p class="sub">Industry grants from the Terengganu and Negeri Sembilan religious councils,
+      held as co-researcher.</p>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>Project</th><th>Funder</th><th>Year</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Development of image processing techniques software in the study of determining
+              hilal visibility in Terengganu</td>
+            <td>MAIDAM</td><td>2025</td><td class="state">In progress</td>
+          </tr>
+          <tr>
+            <td>Study of asteroid position coordinates to obtain an international observatory code
+              for the MAINS Baitul Hilal Complex</td>
+            <td>MAINS</td><td>2024</td><td class="state">Completed 2025</td>
+          </tr>
+          <tr>
+            <td>Effectiveness of small to medium-sized mobile astrophotography telescope systems for
+              sky survey work at the MAINS Baitul Hilal Complex</td>
+            <td>MAINS</td><td>2024</td><td class="state">Completed 2025</td>
+          </tr>
+          <tr>
+            <td>Effects of light pollution on the limitation of hilal and celestial object visibility
+              at Terengganu hilal observation locations</td>
+            <td>MAIDAM</td><td>2023</td><td class="state">Completed 2024</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="recognition">
+  <div class="wrap">
+    <h2>Recognition</h2>
+    <p class="sub">Innovation and invention awards, and the societies I work through.</p>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr><th>Year</th><th>Special award</th><th>Gold</th><th>Silver</th></tr></thead>
+        <tbody>
+          <tr><td>2026</td><td>—</td><td>1</td><td>—</td></tr>
+          <tr><td>2025</td><td>1</td><td>2</td><td>1</td></tr>
+          <tr><td>2024</td><td>1</td><td>2</td><td>—</td></tr>
+          <tr><td>2023</td><td>—</td><td>4</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scroll" style="margin-top:3rem">
+      <table class="tbl">
+        <thead><tr><th>Society</th><th>Member since</th></tr></thead>
+        <tbody>
+          <tr><td>Islamic Crescent Observation Project (ICOP)</td><td>2023, lifetime</td></tr>
+          <tr><td>Dark Sky Malaysia</td><td>2023</td></tr>
+          <tr><td>Sahabat Langit Utara (SALUT)</td><td>2023</td></tr>
+          <tr><td>Persatuan Falak Syarie Malaysia</td><td>2024</td></tr>
+          <tr><td>Infinite Sky Society</td><td>2024</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="background">
+  <div class="wrap">
+    <h2>Background</h2>
+    <p class="sub">All degrees at Universiti Sultan Zainal Abidin.</p>
+    <ul class="cv">
+      <li><b>2025</b>
+        <div><h3>Master of Science, Astronomy</h3>
+        <p><i>The implementation of image processing for new crescent moon visibility detection
+        using enhancement technique.</i></p></div>
+      </li>
+      <li><b>2023</b>
+        <div><h3>Bachelor of Islamic Studies (Hons.), Syariah</h3>
+        <p>Islamic astronomy. <i>Legal analysis of prayer in high-altitude areas and high-rise
+        buildings.</i></p></div>
+      </li>
+      <li><b>2021</b>
+        <div><h3>Diploma of Islamic Studies (Hons.), Syariah</h3>
+        <p>Syariah.</p></div>
+      </li>
+    </ul>
+    <p style="margin-top:2.2rem"><a class="btn" href="Ahmad_Lutfi_Afifi_CV.pdf">Download full CV</a></p>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <p class="sub">Open to collaboration on crescent detection, observation systems and sky quality
+      monitoring.</p>
+    <p class="mail"><a href="mailto:lutfi.afifi@unisza.edu.my">lutfi.afifi@unisza.edu.my</a></p>
+    <div class="links">
+      <a href="https://orcid.org/0009-0008-9147-5234">ORCID<span>0009-0008-9147-5234</span></a>
+      <a href="https://scholar.google.com/citations?user=dQ2Bi_IAAAAJ&amp;hl=en">Google Scholar<span>Citations and metrics</span></a>
+      <a href="https://www.scopus.com/authid/detail.uri?authorId=57208125285">Scopus<span>Author ID 57208125285</span></a>
+      <a href="https://www.webofscience.com/wos/author/record/54318209">Web of Science<span>Researcher record</span></a>
+      <a href="https://www.researchgate.net/profile/Ahmad_Lutfi_Afifi/">ResearchGate<span>Preprints and full texts</span></a>
+      <a href="https://unisze.academia.edu/AhmadLutfiAfifiMohdNasir">Academia.edu<span>Papers and talks</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Ahmad Lutfi Afifi bin Mohd Nasir. Balai Cerap KUSZA, East Coast Environmental Research
+      Institute, Universiti Sultan Zainal Abidin, 21300 Kuala Nerus, Terengganu, Malaysia.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btns = document.querySelectorAll('.filter button');
+  var blocks = document.querySelectorAll('.year');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var f = b.dataset.f;
+      btns.forEach(function(o){ o.setAttribute('aria-pressed', String(o === b)); });
+      blocks.forEach(function(el){
+        el.classList.toggle('hidden', f !== 'all' && el.dataset.kind !== f);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
