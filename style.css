@@ -450,3 +450,161 @@ footer a:hover{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){
   .gl,.gl-def,.focus-read p{transition:none}
 }
+
+/* ==========================================================================
+   12. Depth, motion and interactive pieces
+   Everything below is additive. Removing this block returns the site to the
+   layout above it, so any piece can be pulled out without breaking a page.
+   ========================================================================== */
+
+/* --- Reading progress ----------------------------------------------------
+   Injected by script.js into every page, so there is no markup to maintain. */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;pointer-events:none}
+.progress i{display:block;height:100%;width:0;transform-origin:left;
+  background:linear-gradient(90deg,var(--accent),#C9B9FF 55%,var(--gold));
+  box-shadow:0 0 14px rgba(138,164,255,.75)}
+
+/* --- Twinkling starfield -------------------------------------------------
+   A canvas injected above the shade of every sky band. The drawn SVG scenes
+   stay as the base layer; this only adds the movement. */
+.starfield{position:absolute;inset:0;z-index:-1;width:100%;height:100%;
+  pointer-events:none;display:block}
+
+/* --- Parallax on the sky bands ------------------------------------------- */
+.band-bg{transform:translate3d(0,0,0) scale(1.07);will-change:transform}
+@media (prefers-reduced-motion:reduce){.band-bg{transform:none}}
+
+/* --- Eyebrow rule --------------------------------------------------------- */
+.eyebrow{display:inline-flex;align-items:center;gap:.65rem}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.55;flex:none}
+
+/* --- Heading polish ------------------------------------------------------- */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  h2{background:linear-gradient(175deg,#FFFFFF 10%,#BFCEEC 92%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .band h2{background:linear-gradient(175deg,#FFFFFF 10%,#CFDAF5 92%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+}
+.hero h1{text-shadow:0 0 46px rgba(138,164,255,.28)}
+
+/* --- Navigation underline ------------------------------------------------- */
+@media (min-width:921px){
+  .nav ul a{position:relative}
+  .nav ul a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;
+    background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.2,.65,.2,1)}
+  .nav ul a:hover::after{transform:scaleX(1)}
+  .nav ul a.active::after{transform:scaleX(1)}
+}
+
+/* --- Button sheen --------------------------------------------------------- */
+.btn-primary{position:relative;overflow:hidden;isolation:isolate}
+.btn-primary::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.5) 50%,transparent 68%);
+  transform:translateX(-130%);transition:transform .65s cubic-bezier(.2,.65,.2,1)}
+.btn-primary:hover::after{transform:translateX(130%)}
+@media (prefers-reduced-motion:reduce){.btn-primary::after{display:none}}
+
+/* --- Card spotlight ------------------------------------------------------
+   A soft light follows the cursor across the card. The custom properties are
+   set by script.js on pointermove and default to a harmless centre. */
+.card{position:relative}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  opacity:0;transition:opacity .3s ease;z-index:1;
+  background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%),rgba(138,164,255,.17),transparent 62%)}
+.card::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;z-index:3;
+  opacity:0;transition:opacity .3s ease;
+  background:linear-gradient(90deg,transparent,rgba(175,194,255,.85),transparent)}
+.card:hover::before,.card:hover::after{opacity:1}
+.card > *{position:relative;z-index:2}
+.card:hover .card-img{transform:scale(1.03)}
+.card-img{transition:transform .5s cubic-bezier(.2,.65,.2,1)}
+@media (prefers-reduced-motion:reduce){.card:hover .card-img{transform:none}}
+
+/* --- Counters ------------------------------------------------------------- */
+.stat b,.award-summary div b,.skynow-stats b{font-variant-numeric:tabular-nums}
+.stat{transition:background .25s ease}
+.stat:hover{background:#18244A}
+.keywords span{transition:border-color .2s,color .2s,background .2s,transform .2s}
+.keywords span:hover{border-color:var(--accent);color:var(--accent-2);
+  background:rgba(138,164,255,.10);transform:translateY(-2px)}
+.pill{transition:background .2s,border-color .2s,transform .2s}
+.pill:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.4);transform:translateY(-2px)}
+
+/* --- Row hover on lists --------------------------------------------------- */
+.talk-list li,.tl li{margin-inline:-.75rem;padding-inline:.75rem;border-radius:10px;
+  transition:background .22s ease}
+.talk-list li:hover,.tl li:hover{background:rgba(138,164,255,.07)}
+.band .talk-list li:hover,.band .tl li:hover{background:rgba(255,255,255,.07)}
+
+/* ==========================================================================
+   The moon tonight
+   ========================================================================== */
+.skynow{position:relative;overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(900px 520px at 14% 26%,rgba(138,164,255,.13),transparent 62%),
+    radial-gradient(700px 420px at 88% 78%,rgba(233,196,106,.07),transparent 60%),
+    linear-gradient(180deg,var(--bg),#090F22 48%,var(--bg))}
+.skynow-in{display:grid;grid-template-columns:minmax(180px,280px) minmax(0,1fr);
+  gap:clamp(2rem,6vw,4.5rem);align-items:center}
+.moon-stage{position:relative;width:100%;aspect-ratio:1}
+.moon-stage canvas{width:100%;height:100%;display:block}
+.skynow-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;margin-top:1.7rem}
+.skynow-stats div{background:rgba(19,30,60,.72);padding:1.05rem 1.1rem;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.skynow-stats b{display:block;font-size:clamp(1.15rem,1.9vw,1.45rem);font-weight:800;
+  letter-spacing:-.035em;line-height:1.15;color:var(--ink);text-wrap:balance}
+.skynow-stats b small{font-size:.55em;font-weight:700;letter-spacing:0;color:var(--muted);margin-left:.15em}
+.skynow-stats span{display:block;font-size:.75rem;color:var(--muted);margin-top:.45rem;line-height:1.35}
+@media (max-width:820px){
+  .skynow-in{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .moon-stage{max-width:230px}
+  .skynow-stats{grid-template-columns:1fr 1fr;text-align:left}
+  .skynow .lead{margin-bottom:0}
+}
+
+/* ==========================================================================
+   Detection demo
+   ========================================================================== */
+.lab{margin-top:clamp(2.5rem,5vw,3.5rem);border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.lab-stage{position:relative;aspect-ratio:16/9;background:#05091A;touch-action:pan-y}
+.lab-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lab-proc{clip-path:inset(0 0 0 50%)}
+.lab-line{position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.9) 18%,rgba(255,255,255,.9) 82%,rgba(255,255,255,.15));
+  box-shadow:0 0 20px rgba(138,164,255,.85)}
+.lab-line::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.9);
+  background:rgba(7,12,26,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.lab-line::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:20px;height:12px;z-index:1;
+  background:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 2 3 6l4 4M13 2l4 4-4 4'/%3E%3C/svg%3E") center/20px 12px no-repeat}
+.lab-range{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;
+  opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none;background:none}
+.lab-range::-webkit-slider-thumb{-webkit-appearance:none;width:44px;height:100%}
+.lab-stage:has(.lab-range:focus-visible){outline:3px solid var(--accent);outline-offset:-3px}
+.lab-tag{position:absolute;top:.85rem;z-index:2;pointer-events:none;font-size:.66rem;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;padding:.32rem .65rem;border-radius:999px;
+  background:rgba(5,9,26,.62);border:1px solid rgba(255,255,255,.2);color:#fff;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.lab-tag.l{left:.85rem}
+.lab-tag.r{right:.85rem;color:#CFE0FF;border-color:rgba(138,164,255,.5)}
+.lab-bar{display:flex;flex-wrap:wrap;gap:.8rem 1rem;align-items:center;
+  padding:1rem 1.2rem;border-top:1px solid var(--line);background:rgba(255,255,255,.02)}
+.lab-bar .lab-note{font-size:.82rem;color:var(--muted);margin:0;flex:1;min-width:14rem;line-height:1.5}
+.lab-readout{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;
+  color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:.28rem .7rem;white-space:nowrap}
+@media (max-width:640px){
+  .lab-stage{aspect-ratio:4/3}
+  .lab-tag{font-size:.6rem;letter-spacing:.1em}
+}
+
+/* --- Reduced motion ------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .progress i{transition:none}
+  .nav ul a::after{transition:none}
+  .card::before,.card::after{transition:none}
+}

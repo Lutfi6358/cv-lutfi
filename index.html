@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ahmad Lutfi Afifi Mohd Nasir | Hilal detection, falak and computer vision</title>
-<meta name="description" content="Ahmad Lutfi Afifi bin Mohd Nasir. Research Assistant and PhD candidate at ESERI, Universiti Sultan Zainal Abidin. Automated new crescent moon (hilal) detection using image processing, deep learning and computer vision.">
-<meta name="author" content="Ahmad Lutfi Afifi bin Mohd Nasir">
+<meta name="description" content="Ahmad Lutfi Afifi Mohd Nasir. Research Assistant and PhD candidate at ESERI, Universiti Sultan Zainal Abidin. Automated new crescent moon (hilal) detection using image processing, deep learning and computer vision.">
+<meta name="author" content="Ahmad Lutfi Afifi Mohd Nasir">
 <link rel="canonical" href="https://hotohhilal.com/">
 <meta property="og:type" content="profile">
 <meta property="og:title" content="Ahmad Lutfi Afifi Mohd Nasir">
@@ -24,7 +24,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Ahmad Lutfi Afifi bin Mohd Nasir",
+  "name": "Ahmad Lutfi Afifi Mohd Nasir",
   "alternateName": "Ahmad Lutfi Afifi",
   "jobTitle": "Research Assistant and PhD candidate",
   "affiliation": {
@@ -104,6 +104,36 @@
   </div>
   <a class="scroll-cue" href="#about" aria-hidden="true" tabindex="-1">Scroll
     <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></a>
+</section>
+
+<!-- ======================================================================
+     THE MOON TONIGHT
+     The figures are computed in the browser from the mean synodic month.
+     Nothing here is fetched, so the strip works offline and on GitHub Pages.
+     ====================================================================== -->
+<section class="skynow" id="tonight" aria-label="The moon tonight">
+  <div class="wrap skynow-in">
+    <div class="moon-stage reveal">
+      <canvas id="moon-now" role="img"
+        aria-label="A drawing of the moon at its current phase"></canvas>
+    </div>
+    <div>
+      <p class="eyebrow reveal">Right now</p>
+      <h2 class="reveal">The moon tonight</h2>
+      <p class="lead reveal d1" style="margin-bottom:0">Where the month currently stands. A crescent below
+        roughly three percent illumination is close to the limit of what any instrument will recover from a
+        bright twilight sky, which is the case my work is built for.</p>
+      <div class="skynow-stats reveal d2">
+        <div><b id="moon-age">&mdash;</b><span>Since conjunction</span></div>
+        <div><b id="moon-illum">&mdash;</b><span>Illuminated</span></div>
+        <div><b id="moon-phase">&mdash;</b><span>Phase</span></div>
+        <div><b id="moon-next">&mdash;</b><span id="moon-next-label">Next new moon</span></div>
+      </div>
+      <p class="stat-note reveal d3">Computed from the mean synodic month against a known conjunction, so it
+        is geocentric and accurate to within a few hours. It is not a sighting prediction and carries no
+        weight in isbat. The orientation drawn is schematic.</p>
+    </div>
+  </div>
 </section>
 
 <!-- ====================================================================== ABOUT -->
@@ -210,6 +240,41 @@
           <a class="more" href="publications.html">View papers &rarr;</a>
         </div>
       </article>
+    </div>
+
+    <!-- ------------------------------------------------------------------
+         Detection demo. The frame is drawn in the browser rather than loaded
+         from a photograph, and the enhancement really is run on those pixels:
+         a contrast-limited local stretch, tile by tile. Replace the drawRaw
+         function in script.js with a real observation frame to demonstrate on
+         actual data.
+         ------------------------------------------------------------------ -->
+    <p class="subhead reveal" style="margin-top:3.4rem">Try it</p>
+    <h3 class="reveal" style="font-size:clamp(1.25rem,2.4vw,1.55rem);margin:.6rem 0 .7rem">
+      Pulling a crescent out of a bright sky</h3>
+    <p class="lead reveal d1" style="margin-bottom:0">Drag the handle across the frame. The left is the
+      exposure as the sensor recorded it, where the crescent sits only a few levels above the twilight
+      gradient around it. The right is the same pixels after a contrast-limited local stretch. Then let the
+      Circular Hough Transform find the lunar disc from its edge alone.</p>
+
+    <div class="lab reveal d1">
+      <div class="lab-stage">
+        <canvas class="lab-raw" role="img"
+          aria-label="A simulated twilight exposure in which the new crescent moon is barely distinguishable from the sky"></canvas>
+        <canvas class="lab-proc" role="img"
+          aria-label="The same exposure after contrast enhancement, with the crescent clearly visible"></canvas>
+        <span class="lab-tag l">Raw frame</span>
+        <span class="lab-tag r">Contrast enhanced</span>
+        <div class="lab-line" aria-hidden="true"></div>
+        <input class="lab-range" type="range" min="0" max="100" value="50" step="0.1"
+          aria-label="Wipe between the raw frame and the enhanced frame">
+      </div>
+      <div class="lab-bar">
+        <button class="btn btn-primary btn-sm" type="button" data-lab-run>Run detection</button>
+        <span class="lab-readout" data-lab-readout aria-live="off">raw 50% · enhanced 50%</span>
+        <p class="lab-note">Synthetic frame, real processing. The enhancement and the circle fit both run on
+          these pixels in your browser.</p>
+      </div>
     </div>
   </div>
 </section>
