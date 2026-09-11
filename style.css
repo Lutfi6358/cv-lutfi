@@ -393,14 +393,9 @@ footer a:hover{color:var(--accent)}
    11. Short Bio interactions
    ========================================================================== */
 
-/* Reading focus. The paragraph under the cursor stays lit while its siblings
-   recede. Guarded to devices with a real pointer, so a tap on a phone can
-   never leave the bio stuck in a dimmed state. */
-@media (hover:hover) and (pointer:fine){
-  .focus-read p{transition:opacity .35s ease,color .35s ease}
-  .focus-read:hover p{opacity:.45}
-  .focus-read p:hover{opacity:1;color:var(--ink)}
-}
+/* The paragraph dimming that used to live here was removed when the bio gained
+   the scatter effect in section 13. Running both meant the paragraph you were
+   reading came apart while its neighbours faded at the same time. */
 
 /* Glossary term. Dotted underline at rest; lights up on hover or keyboard
    focus and reveals its definition. The definition is a real element rather
@@ -607,4 +602,35 @@ footer a:hover{color:var(--accent)}
   .progress i{transition:none}
   .nav ul a::after{transition:none}
   .card::before,.card::after{transition:none}
+}
+
+/* ==========================================================================
+   13. Pointer effects
+   Both pieces below are driven by script.js and are switched off entirely for
+   coarse pointers and for anyone who has asked for reduced motion, so a phone
+   keeps its native tap behaviour and its native cursor.
+   ========================================================================== */
+
+/* --- Droplet cursor ------------------------------------------------------
+   A single fixed canvas covers the viewport and draws the bead and its
+   ripples. The native cursor is hidden only while the pointer is actually
+   inside a sky section and away from anything clickable, which is why the
+   class is toggled on the root element rather than set in one place. */
+.droplet{position:fixed;inset:0;z-index:70;pointer-events:none;display:block}
+html.drop-on,html.drop-on body{cursor:none}
+html.drop-on a,html.drop-on button,html.drop-on input{cursor:none}
+
+/* --- Scattering words ----------------------------------------------------
+   script.js wraps every word of the bio in one of these. The transition is
+   what gives the spring: the script sets a target transform each frame and
+   the browser eases towards it, then back to nothing when the pointer leaves. */
+.focus-read .w{display:inline-block;transition:transform .38s cubic-bezier(.22,.9,.28,1),
+  color .38s ease,text-shadow .38s ease}
+.focus-read .w.lit{color:var(--ink);text-shadow:0 0 22px rgba(138,164,255,.55)}
+/* A glossary term scatters as one piece, underline and all, rather than
+   letting its text drift out from under its own dotted rule. */
+.focus-read .gl.w{display:inline-block}
+
+@media (prefers-reduced-motion:reduce){
+  .focus-read .w{transition:none}
 }

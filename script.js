@@ -832,3 +832,291 @@
     }, { passive: true });
   }());
 })();
+
+/* ==========================================================================
+   hotohhilal.com — pointer effects
+   A droplet cursor over the sky sections, and a bio whose words move out of
+   the pointer's way. Both need a real pointer and a visitor who has not asked
+   for reduced motion; otherwise this whole block does nothing and the page
+   keeps its native cursor and its static text.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!fine || calm) { return; }
+
+  var TAU = Math.PI * 2;
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+  /* ========================================================================
+     Droplet cursor
+     Zones are the sky sections. Anything clickable inside one keeps the
+     ordinary arrow, because a bead of water is a poor affordance for a link.
+     ======================================================================== */
+  (function droplet() {
+    var ZONES = '.hero, .skynow, .band';
+    var KEEP_ARROW = 'a, button, input, textarea, select, label, .card, .lab, .tbl-wrap, .feature';
+    if (!document.querySelector(ZONES)) { return; }
+
+    var cv = document.createElement('canvas');
+    cv.className = 'droplet';
+    cv.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(cv);
+    var ctx = cv.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+
+    function size() {
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    size();
+    window.addEventListener('resize', size, { passive: true });
+
+    var mx = -999, my = -999;          // where the pointer actually is
+    var px = -999, py = -999;          // where the bead is, always a little behind
+    var vx = 0, vy = 0;
+    var active = false, running = false;
+    var ripples = [], trail = [], travelled = 0;
+    var root = document.documentElement;
+
+    document.addEventListener('pointermove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      var t = e.target;
+      var inZone = t && t.closest && t.closest(ZONES) && !t.closest(KEEP_ARROW);
+      if (inZone && !active) {
+        active = true;
+        px = mx; py = my;                      // no long swoop in from the last spot
+        root.classList.add('drop-on');
+        start();
+      } else if (!inZone && active) {
+        active = false;
+        root.classList.remove('drop-on');
+      }
+    }, { passive: true });
+
+    document.addEventListener('pointerdown', function () {
+      if (active) { ripples.push({ x: mx, y: my, t: 0, max: 150, w: 2.4 }); }
+    }, { passive: true });
+
+    document.addEventListener('pointerleave', function () {
+      active = false;
+      root.classList.remove('drop-on');
+    }, { passive: true });
+
+    function start() { if (!running) { running = true; requestAnimationFrame(frame); } }
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+
+      if (active) {
+        // The bead chases the pointer. The gap between the two is what gives
+        // it weight, and the velocity is what stretches it.
+        var nx = px + (mx - px) * 0.2;
+        var ny = py + (my - py) * 0.2;
+        vx = nx - px; vy = ny - py;
+        px = nx; py = ny;
+
+        travelled += Math.hypot(vx, vy);
+        if (travelled > 38) {                  // a ring every so often, not every frame
+          travelled = 0;
+          ripples.push({ x: px, y: py, t: 0, max: 78 + Math.random() * 46, w: 1.5 });
+        }
+        trail.push({ x: px, y: py });
+        if (trail.length > 9) { trail.shift(); }
+      } else if (trail.length) {
+        trail.shift();
+      }
+
+      // Ripples first, so the bead always sits on top of its own wake
+      for (var i = ripples.length - 1; i >= 0; i--) {
+        var r = ripples[i];
+        r.t += 0.022;
+        if (r.t >= 1) { ripples.splice(i, 1); continue; }
+        var k = 1 - Math.pow(1 - r.t, 3);      // fast out, slow settle
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, k * r.max, 0, TAU);
+        ctx.strokeStyle = 'rgba(175,194,255,' + (0.42 * (1 - r.t) * (1 - r.t)).toFixed(3) + ')';
+        ctx.lineWidth = r.w * (1 - r.t);
+        ctx.stroke();
+      }
+
+      // The tail the bead drags behind it
+      for (var j = 0; j < trail.length; j++) {
+        var a = (j + 1) / trail.length;
+        var g0 = ctx.createRadialGradient(trail[j].x, trail[j].y, 0, trail[j].x, trail[j].y, 13 * a);
+        g0.addColorStop(0, 'rgba(186,205,255,' + (0.13 * a * a).toFixed(3) + ')');
+        g0.addColorStop(1, 'rgba(186,205,255,0)');
+        ctx.fillStyle = g0;
+        ctx.beginPath(); ctx.arc(trail[j].x, trail[j].y, 13 * a, 0, TAU); ctx.fill();
+      }
+
+      if (active || trail.length) {
+        var speed = Math.hypot(vx, vy);
+        var s = clamp(speed / 26, 0, 1);
+        var R = 14;
+
+        ctx.save();
+        ctx.translate(px, py);
+        if (speed > 0.4) { ctx.rotate(Math.atan2(vy, vx)); }
+        ctx.scale(1 + s * 0.6, 1 - s * 0.32);   // stretched along the direction of travel
+
+        // A halo first, so the bead still reads where it crosses the bright
+        // part of the sky scene or a headline
+        var halo = ctx.createRadialGradient(0, 0, R * 0.7, 0, 0, R * 2.4);
+        halo.addColorStop(0, 'rgba(150,180,255,.20)');
+        halo.addColorStop(1, 'rgba(150,180,255,0)');
+        ctx.fillStyle = halo;
+        ctx.beginPath(); ctx.arc(0, 0, R * 2.4, 0, TAU); ctx.fill();
+
+        var body = ctx.createRadialGradient(-R * 0.3, -R * 0.35, R * 0.1, 0, 0, R);
+        body.addColorStop(0, 'rgba(255,255,255,.74)');
+        body.addColorStop(0.45, 'rgba(184,206,255,.36)');
+        body.addColorStop(1, 'rgba(150,178,255,.10)');
+        ctx.fillStyle = body;
+        ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fill();
+
+        ctx.strokeStyle = 'rgba(240,246,255,.82)';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.arc(0, 0, R - 0.7, 0, TAU); ctx.stroke();
+
+        // the glint that makes it read as a bead rather than a dot
+        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        ctx.beginPath();
+        ctx.ellipse(-R * 0.34, -R * 0.38, R * 0.2, R * 0.13, -0.6, 0, TAU);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      if (active || ripples.length || trail.length) { requestAnimationFrame(frame); }
+      else { running = false; ctx.clearRect(0, 0, W, H); }
+    }
+  }());
+
+  /* ========================================================================
+     Scattering words
+     Every word of the bio is wrapped once, measured once, and then pushed
+     away from the pointer in proportion to how close it is. Measurements are
+     taken in document coordinates so scrolling does not invalidate them.
+     ======================================================================== */
+  (function scatter() {
+    var host = document.querySelector('.focus-read');
+    if (!host) { return; }
+
+    var RADIUS = 185;      // how far the pointer's influence reaches
+    var PUSH = 40;         // furthest a word is moved, in pixels
+    var GROW = 0.45;       // extra scale at the centre of the effect
+    var TILT = 7;          // degrees
+
+    /* Wrap words. A glossary term is wrapped whole: splitting it would leave
+       its dotted underline behind while the word walked away from it. */
+    function wrap(node) {
+      var kids = Array.prototype.slice.call(node.childNodes);
+      kids.forEach(function (n) {
+        if (n.nodeType === 1) {
+          if (n.classList.contains('gl')) { n.classList.add('w'); }
+          else { wrap(n); }
+          return;
+        }
+        if (n.nodeType !== 3 || !n.nodeValue.trim()) { return; }
+        var frag = document.createDocumentFragment();
+        n.nodeValue.split(/(\s+)/).forEach(function (piece) {
+          if (!piece) { return; }
+          if (/^\s+$/.test(piece)) { frag.appendChild(document.createTextNode(piece)); return; }
+          var s = document.createElement('span');
+          s.className = 'w';
+          s.textContent = piece;
+          frag.appendChild(s);
+        });
+        node.replaceChild(frag, n);
+      });
+    }
+    wrap(host);
+
+    var words = Array.prototype.slice.call(host.querySelectorAll('.w'));
+    if (!words.length) { return; }
+
+    var boxes = [], measured = false;
+
+    /* Positions are taken with every word at rest, in page coordinates. */
+    function measure() {
+      words.forEach(function (w) { w.style.transform = ''; });
+      boxes = words.map(function (w) {
+        var r = w.getBoundingClientRect();
+        return {
+          x: r.left + window.scrollX + r.width / 2,
+          y: r.top + window.scrollY + r.height / 2,
+          tx: 0, ty: 0, lit: false
+        };
+      });
+      measured = true;
+    }
+
+    var queued = false, cursor = null;
+
+    function apply() {
+      queued = false;
+      if (!cursor) { return; }
+      var cx = cursor.x, cy = cursor.y;
+
+      for (var i = 0; i < words.length; i++) {
+        var b = boxes[i];
+        var dx = b.x - cx, dy = b.y - cy;
+        var d = Math.hypot(dx, dy);
+        var tx = 0, ty = 0, sc = 1, rot = 0, lit = false;
+
+        if (d < RADIUS) {
+          var f = 1 - d / RADIUS;
+          f *= f;                                  // concentrate the effect near the tip
+          var k = d < 0.001 ? 0 : PUSH * f / d;
+          tx = dx * k; ty = dy * k;
+          sc = 1 + GROW * f;
+          rot = (dx < 0 ? -1 : 1) * TILT * f;
+          lit = f > 0.06;
+        }
+
+        // Only touch the DOM when the value has actually moved
+        if (Math.abs(tx - b.tx) > 0.3 || Math.abs(ty - b.ty) > 0.3 || (lit !== b.lit)) {
+          b.tx = tx; b.ty = ty;
+          words[i].style.transform = tx || ty
+            ? 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' +
+              sc.toFixed(3) + ') rotate(' + rot.toFixed(2) + 'deg)'
+            : '';
+          if (lit !== b.lit) { b.lit = lit; words[i].classList.toggle('lit', lit); }
+        }
+      }
+    }
+
+    host.addEventListener('pointerenter', function () { if (!measured) { measure(); } });
+
+    host.addEventListener('pointermove', function (e) {
+      if (!measured) { measure(); }
+      cursor = { x: e.clientX + window.scrollX, y: e.clientY + window.scrollY };
+      if (!queued) { queued = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+
+    host.addEventListener('pointerleave', function () {
+      cursor = null;
+      words.forEach(function (w, i) {
+        w.style.transform = '';
+        w.classList.remove('lit');
+        boxes[i].tx = 0; boxes[i].ty = 0; boxes[i].lit = false;
+      });
+    }, { passive: true });
+
+    var rt;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { if (measured) { measure(); } }, 200);
+    }, { passive: true });
+
+    // Web fonts land after first paint and shift every word along their line
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { if (measured) { measure(); } });
+    }
+  }());
+})();
