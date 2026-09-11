@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects and Systems | Ahmad Lutfi Afifi Mohd Nasir</title>
+<meta name="description" content="HORTOH, HOTOH 2.0, MySIGHT, Lunar Vision, SkySight and the falak teaching and astrotourism programmes: one patent filing and seven registered copyrights.">
+<meta name="author" content="Ahmad Lutfi Afifi bin Mohd Nasir">
+<link rel="canonical" href="https://hotohhilal.com/projects.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects and Systems | Ahmad Lutfi Afifi Mohd Nasir">
+<meta property="og:description" content="HORTOH, HOTOH 2.0, MySIGHT, Lunar Vision, SkySight and the falak teaching and astrotourism programmes: one patent filing and seven registered copyrights.">
+<meta property="og:url" content="https://hotohhilal.com/projects.html">
+<meta property="og:image" content="https://hotohhilal.com/assets/portrait.webp">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#070C1A">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <div class="nav-in">
+    <a class="brand" href="index.html">Ahmad Lutfi Afifi <span class="brand-jawi">(<span class="jawi" lang="ms-Arab">احمد لطفي عفيفي</span>)</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu
+    </button>
+    <nav aria-label="Primary">
+      <ul id="menu">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#research">Research</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="publications.html">Papers</a></li>
+        <li><a href="index.html#teaching">Teaching</a></li>
+        <li><a href="index.html#talks">Talks</a></li>
+        <li><a href="index.html#outreach">Outreach</a></li>
+        <li><a href="index.html#resume">Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ====================================================================== PAGE HEADER -->
+<section class="page-hero band" aria-label="Projects and systems">
+  <div class="band-bg" style="background-image:url('assets/sky-teaching.svg')"></div>
+  <div class="band-shade"></div>
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">Home</a> &rsaquo; Projects</p>
+    <p class="eyebrow">Systems</p>
+    <h1>Projects and Systems</h1>
+    <p class="lead">Eight registered outputs: one patent filing and seven copyrights, covering hilal
+      detection software, sky quality modelling, and the teaching and astrotourism programmes built
+      around Balai Cerap KUSZA.</p>
+    <div class="stats on-band">
+      <div class="stat"><b>1</b><span>Patent filed</span></div>
+      <div class="stat"><b>7</b><span>Registered copyrights</span></div>
+      <div class="stat"><b>13</b><span>Innovation awards</span></div>
+      <div class="stat"><b>4</b><span>Industry grants</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== DETECTION -->
+<section id="detection">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow reveal">Hilal detection</p>
+      <h2 class="reveal">Finding the crescent</h2>
+      <p class="lead reveal d1">The core line of work. Each system takes the same problem a step further, from a
+        hybrid observation method, to image processing in software, to an integrated tracker.</p>
+    </div>
+
+    <article class="project reveal" id="hortoh">
+      <div>
+        <div class="meta"><span class="chip">Patent filed</span><span>2024</span></div>
+        <h3>HORTOH</h3>
+        <p class="full-name">Hybrid Observation Roslan Technique of Hilal</p>
+        <p>The observation method the rest of the work is built on. A thin crescent close to the horizon is
+        often below what the eye can separate from the twilight behind it, so HORTOH pairs optical
+        observation with image capture and processing, letting the sighting be recorded and checked rather
+        than only reported. That matters for isbat, where a claim that can be re-examined carries more
+        weight than one that cannot.</p>
+        <p>The method was filed as a patent in 2024 and first described in the IEICES proceedings paper on
+        the implementation of the technique.</p>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Patent, filed</dd>
+          <dt>Application number</dt><dd class="mono">P12024000157</dd>
+          <dt>Related paper</dt><dd><a href="publications.html">The implementation of hybrid observation technique of Hilal (HOTOH)</a>, IEICES 10, 2024</dd>
+        </dl>
+      </aside>
+    </article>
+
+    <article class="project reveal" id="hotoh2">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2024</span></div>
+        <h3>HOTOH 2.0</h3>
+        <p class="full-name">Hybrid Observation Technique of Hilal 2.0: image processing for hilal visibility detection using Python</p>
+        <p>The second generation, and the first to exist as software rather than a procedure. HOTOH 2.0
+        implements the enhancement and detection pipeline in Python, so an observation image can be
+        processed on site and the crescent brought out of a low-contrast twilight sky while the observation
+        window is still open.</p>
+        <p>It is the system that has travelled furthest outside the university. In September 2026 it was
+        installed at the Terengganu State Mufti Office with hands-on training, so that the office which has
+        to make the determination can run the system itself.</p>
+        <div class="awards">
+          <span class="chip gold">Special Award, MPI 2024</span>
+          <span class="chip gold">Gold, MPI 2024</span>
+          <span class="chip gold">Gold, ITIEC 2025</span>
+        </div>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRLY2024C01739</dd>
+          <dt>Deployed at</dt><dd>Terengganu State Mufti Office</dd>
+          <dt>Built with</dt><dd>Python, image enhancement and Circular Hough Transform detection</dd>
+        </dl>
+      </aside>
+    </article>
+
+    <article class="project reveal" id="mysight">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2026</span></div>
+        <h3>MySIGHT</h3>
+        <p class="full-name">Malaysia Smart Integrated Global Hilal Tracker</p>
+        <p>Detection on a single evening is one problem. Knowing what was seen, from where, under what sky,
+        across years of attempts is another. MySIGHT brings hilal observation records and site conditions
+        from Malaysian observation sites into one system, so that an individual sighting can be read against
+        the record rather than in isolation.</p>
+        <p>It is the most recent of the registered systems and the one closest to the PhD work, since a
+        detector is only as good as the observations it can be tested against.</p>
+        <div class="awards">
+          <span class="chip gold">Gold, MPI 2026</span>
+        </div>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRLY2026T03441</dd>
+          <dt>Covers</dt><dd>Observation records and site conditions across Malaysian hilal observation sites</dd>
+        </dl>
+      </aside>
+    </article>
+
+    <article class="project reveal" id="lunar-vision">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2025</span></div>
+        <h3>Lunar Vision</h3>
+        <p class="full-name">Lunar Vision: advanced new crescent moon detection</p>
+        <p>A detection package registered in 2025, carrying the enhancement and shape detection work forward
+        from HOTOH 2.0 toward automated detection that can run on live observation rather than on archived
+        images.</p>
+        <div class="awards">
+          <span class="chip gold">Silver, MPI 2025</span>
+        </div>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRLY2025C02375</dd>
+          <dt>Related paper</dt><dd><a href="publications.html">New crescent moon detection using Circular Hough Transform (CHT)</a>, Astronomy and Computing, 2025</dd>
+        </dl>
+      </aside>
+    </article>
+  </div>
+</section>
+
+<!-- ====================================================================== SKY QUALITY -->
+<section id="sky-quality" class="alt">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow reveal">Sky quality</p>
+      <h2 class="reveal">What the sky allows</h2>
+      <p class="lead reveal d1">A detector cannot recover what the sky has already washed out. This side of the work
+        measures and models the conditions that set the limit.</p>
+    </div>
+
+    <article class="project reveal" id="skysight">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2025</span></div>
+        <h3>SkySight</h3>
+        <p class="full-name">Spatial model for human perception and astronomical visibility in light pollution studies</p>
+        <p>Light pollution is usually reported as a brightness figure at a point. SkySight models it as
+        something a person at a site actually experiences, joining sky brightness measurements to a spatial
+        model of what remains visible, which is the form the question takes when an observation site is
+        being chosen or defended.</p>
+        <p>The measurements behind it come from the light pollution monitoring work at KUSZA Observatory,
+        Langkawi National Observatory and the Terengganu hilal observation sites.</p>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRDV2025Q02626</dd>
+          <dt>Related papers</dt><dd><a href="publications.html">Assessment of light pollution at new crescent moon observation sites in Terengganu</a> and the zenithal sky brightness monitoring papers</dd>
+        </dl>
+      </aside>
+    </article>
+  </div>
+</section>
+
+<!-- ====================================================================== TEACHING AND PUBLIC -->
+<section id="teaching-tools">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow reveal">Teaching and public programmes</p>
+      <h2 class="reveal">Passing it on</h2>
+      <p class="lead reveal d1">Falak is taught to students who did not arrive through physics, and the observatory
+        receives visitors who are not astronomers. These are the outputs built for them.</p>
+    </div>
+
+    <article class="project reveal" id="ifalak">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2025</span></div>
+        <h3>Modul Interaktif Astronomi I-Falak</h3>
+        <p class="full-name">Interactive astronomy module for falak teaching</p>
+        <p>A classroom module that treats falak as something to be worked through rather than read about,
+        built for Islamic studies students who need the astronomy to sit alongside the fiqh rather than
+        replace it.</p>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRDV2025Q02627</dd>
+          <dt>Audience</dt><dd>University Islamic studies students</dd>
+        </dl>
+      </aside>
+    </article>
+
+    <article class="project reveal" id="falak-ar">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2023</span></div>
+        <h3>Falak through hybrid methods</h3>
+        <p class="full-name">Pengajaran dan pembelajaran subjek falak melalui kaedah hibrid: permainan interaktif dan implementasi augmented reality</p>
+        <p>The AL-KAHF card game and its augmented reality layer, built so that constellations, lunar phases
+        and the geometry behind a sighting can be handled rather than only diagrammed. It has since been used
+        in school STEM carnivals as well as university teaching, and the classroom results were published in
+        Jurnal Fizik Malaysia.</p>
+        <p>It is the most decorated of the outputs, with four medals across university and international
+        teaching innovation competitions in 2023.</p>
+        <div class="awards">
+          <span class="chip gold">Gold, UniCEL 2023</span>
+          <span class="chip gold">Gold, MPI 2023</span>
+          <span class="chip gold">Gold, SPFK 2023</span>
+          <span class="chip gold">Silver, IUCEL 2023</span>
+        </div>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRLY2023C01927</dd>
+          <dt>Related paper</dt><dd><a href="publications.html">Teaching and learning astronomy subjects through hybrid methods: AL-KAHF games activity based on augmented reality</a>, Jurnal Fizik Malaysia, 2024</dd>
+        </dl>
+      </aside>
+    </article>
+
+    <article class="project reveal" id="astrotourism">
+      <div>
+        <div class="meta"><span class="chip">Copyright</span><span>2024</span></div>
+        <h3>Astrotourism at KUSZA Observatory</h3>
+        <p class="full-name">Astrotourism: elevating user experience and enriching astronomy knowledge at KUSZA Observatory, Universiti Sultan Zainal Abidin</p>
+        <p>A visitor programme that treats Balai Cerap KUSZA as a public building as well as a research
+        site. It sets out what a visitor sees, in what order, and what they should be able to explain
+        afterwards, which turns an observatory tour into something with a teaching shape.</p>
+        <p>It has been recognised in both innovation and tourism competitions, including a Best Design
+        Award at ITIEC 2025.</p>
+        <div class="awards">
+          <span class="chip gold">Best Design, ITIEC 2025</span>
+          <span class="chip gold">Gold, ITIEC 2025</span>
+          <span class="chip gold">Gold, MPI 2024</span>
+          <span class="chip gold">Gold, GTIC 2023</span>
+        </div>
+      </div>
+      <aside class="side">
+        <dl>
+          <dt>Type</dt><dd>Copyright, granted</dd>
+          <dt>Notification number</dt><dd class="mono">CRLY2024C01738</dd>
+          <dt>Site</dt><dd>Balai Cerap KUSZA, Kuala Nerus, Terengganu</dd>
+        </dl>
+      </aside>
+    </article>
+  </div>
+</section>
+
+<!-- ====================================================================== FUNDING -->
+<section id="funding" class="alt">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow reveal">Funding</p>
+      <h2 class="reveal">Grants behind the work</h2>
+      <p class="lead reveal d1">Industry grants from the Terengganu and Negeri Sembilan religious councils, held as
+        co-researcher. These fund the observation, measurement and software work above.</p>
+    </div>
+    <div class="tbl-wrap reveal">
+      <table class="tbl">
+        <thead><tr><th>Project</th><th>Funder</th><th>Year</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Project">Development of image processing techniques software in the study of determining hilal visibility in Terengganu</td><td data-label="Funder">MAIDAM</td><td data-label="Year">2025</td><td data-label="Status"><span class="chip green">In progress</span></td></tr>
+          <tr><td data-label="Project">Study of asteroid position coordinates to obtain an international observatory code for the MAINS Baitul Hilal Complex</td><td data-label="Funder">MAINS</td><td data-label="Year">2024</td><td data-label="Status"><span class="chip grey">Completed 2025</span></td></tr>
+          <tr><td data-label="Project">Effectiveness of small to medium-sized mobile astrophotography telescope systems for sky survey work at the MAINS Baitul Hilal Complex</td><td data-label="Funder">MAINS</td><td data-label="Year">2024</td><td data-label="Status"><span class="chip grey">Completed 2025</span></td></tr>
+          <tr><td data-label="Project">Effects of light pollution on the limitation of new moon (hilal) and celestial object visibility at Terengganu hilal observation locations</td><td data-label="Funder">MAIDAM</td><td data-label="Year">2023</td><td data-label="Status"><span class="chip grey">Completed 2024</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="stat-note reveal">MAIDAM is the Terengganu Islamic Religious and Malay Customs Council. MAINS is the
+      Negeri Sembilan Islamic Religious Council.</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-primary" href="publications.html">Read the papers</a>
+      <a class="btn btn-outline" href="Ahmad_Lutfi_Afifi_CV.pdf">Download full CV</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== CONTACT -->
+<section id="contact" class="band contact-band">
+  <div class="band-bg" style="background-image:url('assets/sky-contact.svg')"></div>
+  <div class="band-shade shade-contact"></div>
+  <div class="wrap contact-in">
+    <p class="eyebrow reveal">Get in touch</p>
+    <h2 class="reveal">Contact</h2>
+    <p class="lead reveal d1" style="margin:0 auto 1rem">Open to collaboration on crescent detection, observation systems and
+      sky quality monitoring.</p>
+    <a class="mail reveal d1" href="mailto:lutfi.afifi@unisza.edu.my">lutfi.afifi@unisza.edu.my</a>
+    <div class="links reveal d2">
+      <a href="https://orcid.org/0009-0008-9147-5234"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 8v8M13 8h2.5a4 4 0 0 1 0 8H13z"/></svg>ORCID</a>
+      <a href="https://scholar.google.com/citations?user=dQ2Bi_IAAAAJ&amp;hl=en"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5z"/><path d="M7 11.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-4.5"/></svg>Google Scholar</a>
+      <a href="https://www.scopus.com/authid/detail.uri?authorId=57208125285"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h16"/></svg>Scopus</a>
+      <a href="https://www.webofscience.com/wos/author/record/54318209"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Web of Science</a>
+      <a href="https://www.researchgate.net/profile/Ahmad_Lutfi_Afifi/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16V8h3a2.5 2.5 0 0 1 0 5H8l4 3"/><path d="M15 6h3M16.5 4.5v3"/></svg>ResearchGate</a>
+      <a href="https://unisze.academia.edu/AhmadLutfiAfifiMohdNasir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M6 19l6-14 6 14M8.5 14h7"/></svg>Academia.edu</a>
+    </div>
+    <p class="addr reveal d3">Balai Cerap KUSZA, East Coast Environmental Research Institute<br>
+      Universiti Sultan Zainal Abidin, 21300 Kuala Nerus, Terengganu, Malaysia</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="yr">2026</span> Ahmad Lutfi Afifi bin Mohd Nasir. All rights reserved.</span>
+    <nav aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="publications.html">Publications</a>
+      <a href="Ahmad_Lutfi_Afifi_CV.pdf">CV</a>
+      <a href="#top">Back to top &uarr;</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

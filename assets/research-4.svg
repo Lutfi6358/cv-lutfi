@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 230">
+          <rect width="440" height="230" fill="#081324"/>
+          <rect x="26" y="22" width="388" height="172" fill="#0B1728"/>
+          <g fill="#fff"><circle cx="90" cy="56" r="1.3" opacity=".4"/><circle cx="360" cy="48" r="1.1" opacity=".3"/>
+            <circle cx="150" cy="166" r="1.2" opacity=".26"/><circle cx="308" cy="148" r="1" opacity=".24"/></g>
+          <mask id="rc5"><circle cx="220" cy="110" r="30" fill="#fff"/><circle cx="207" cy="99" r="27" fill="#000"/></mask>
+          <circle cx="220" cy="110" r="30" fill="#FFF4DC" mask="url(#rc5)"/>
+          <rect x="176" y="68" width="92" height="88" fill="none" stroke="#C9A227" stroke-width="1.4"/>
+          <g stroke="#E8B667" stroke-width="3" fill="none">
+            <path d="M176 82 v-14 h14"/><path d="M254 68 h14 v14"/>
+            <path d="M268 142 v14 h-14"/><path d="M190 156 h-14 v-14"/>
+          </g>
+          <rect x="176" y="46" width="50" height="17" fill="#C9A227"/>
+          <text x="184" y="59" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#14243D">hilal</text>
+        </svg>
